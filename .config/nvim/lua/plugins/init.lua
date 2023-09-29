@@ -1,5 +1,6 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
+	print(lazypath)
 	vim.fn.system {
 		"git",
 		"clone",
@@ -38,6 +39,11 @@ require("lazy").setup {
 		opts = {},
 	},
 
+	{
+		"tpope/vim-fugitive",
+		lazy = false,
+	},
+
 	"nvim-lua/plenary.nvim",
 	{
 		"nvim-telescope/telescope.nvim",
@@ -47,13 +53,38 @@ require("lazy").setup {
 
 	{
 		"folke/tokyonight.nvim",
-		lazy = false,
+		lazy = true,
 		priority = 1000,
 		opts = {},
 	},
+
+	{
+		"phha/zenburn.nvim",
+		lazy = true,
+		priority = 1000,
+		opts = {},
+	},
+
+	{
+		"ellisonleao/gruvbox.nvim",
+		lazy = true,
+		priority = 1000,
+	},
 }
 
-vim.cmd([[colorscheme tokyonight-moon]])
+require("gruvbox").setup {
+	terminal_colors = true,
+	contrast = "soft",
+	italics = {
+		strings = false,
+		emphasis = false,
+		comments = true,
+		operators = false,
+		folds = false,
+	},
+}
+
+vim.cmd([[colorscheme gruvbox]])
 
 require("nvim-tmux-navigation").setup {
 	keybindings = {
@@ -73,8 +104,11 @@ local has_words_before = function()
 	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
-local cmp = require("cmp")
+local feedkey = function(key, mode)
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+end
 
+local cmp = require("cmp")
 require("cmp").setup {
 	enabled = true,
 
@@ -88,40 +122,59 @@ require("cmp").setup {
 		completion = cmp.config.window.bordered(),
 		documentation = cmp.config.window.bordered(),
 	},
+
+	---@diagnostic disable-next-line
+	completion = {
+		autocomplete = false,
+	},
+
+	preselect = cmp.PreselectMode.None,
+
 	mapping = {
-		["<C-e>"] = cmp.mapping.abort(),
+		-- ["<Tab>"] = cmp.mapping(function(fallback)
+		-- 	if cmp.visible() then
+		-- 		local entry = cmp.get_selected_entry()
+		-- 		if not entry then
+		-- 			cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
+		-- 		else
+		-- 			cmp.confirm()
+		-- 		end
+		-- 	else
+		-- 		fallback()
+		-- 	end
+		-- end, { "i", "s", "c" }),
 
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item { behavior = cmp.SelectBehavior.Insert }
 			elseif has_words_before() then
+				cmp.complete()
 			else
 				fallback()
+			end
+		end, { "i", "s" }),
+
+		-- Force completion without any text present
+		["<C-Tab>"] = cmp.mapping(function()
+			if cmp.visible() then
+				cmp.select_next_item { behavior = cmp.SelectBehavior.Insert }
+			elseif has_words_before() then
+				cmp.complete()
+			else
+				cmp.complete()
 			end
 		end, { "i", "s" }),
 
 		["<S-Tab>"] = cmp.mapping(function()
 			if cmp.visible() then
 				cmp.select_prev_item()
+			elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+				feedkey("<Plug>(vsnip-jump-prev)", "")
 			end
 		end, { "i", "s" }),
+
+		["<C-y>"] = cmp.mapping.confirm { select = true },
 	},
-
-	["<CR>"] = cmp.mapping(function(fallback)
-		if cmp.visible() then
-			cmp.mapping.confirm { select = true }
-		else
-			fallback()
-		end
-	end, { "i", "s" }),
-
-	["<C-y>"] = cmp.mapping(function(fallback)
-		if cmp.visible() then
-			cmp.mapping.confirm { select = true }
-		else
-			fallback()
-		end
-	end, { "i", "s" }),
 }
 
 -- Tree Sitter
@@ -150,40 +203,3 @@ require("Comment").setup {
 		extra = false,
 	},
 }
-
-local builtin = require("telescope.builtin")
-local themes = require("telescope.themes")
-require("telescope").setup {
-	defaults = {
-		mappings = {
-			n = {
-				["r"] = function()
-					builtin.live_grep(themes.get_ivy {
-						layout_config = {
-							height = 15,
-						},
-					})
-				end,
-			},
-		},
-	},
-}
-
-vim.keymap.set("n", "<C-p>", "", {
-	callback = function()
-		builtin.find_files(themes.get_ivy {
-			layout_config = {
-				height = 15,
-			},
-		})
-	end,
-})
-vim.keymap.set("n", "<leader>rg", "", {
-	callback = function()
-		builtin.live_grep(themes.get_ivy {
-			layout_config = {
-				height = 15,
-			},
-		})
-	end,
-})

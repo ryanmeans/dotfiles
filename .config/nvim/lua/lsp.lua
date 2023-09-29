@@ -7,6 +7,7 @@ null_ls.setup {
 		null_ls.builtins.formatting.stylua,
 		null_ls.builtins.formatting.cmake_format,
 		null_ls.builtins.formatting.clang_format,
+		-- null_ls.builtins.formatting.black,
 	},
 }
 
@@ -43,6 +44,10 @@ require("lspconfig").clangd.setup {
 	end,
 }
 
+require("lspconfig").gopls.setup {}
+require("lspconfig").terraformls.setup {}
+require("lspconfig").pyright.setup {}
+
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set("n", "<space>e", vim.diagnostic.open_float)
@@ -52,7 +57,7 @@ vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	desc = "LSP actions",
-	callback = function(args)
+	callback = function()
 		local bufmap = function(mode, lhs, rhs)
 			local opts = { buffer = true }
 			vim.keymap.set(mode, lhs, rhs, opts)

@@ -3,6 +3,9 @@ vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 
+-- vim.lsp.set_log_level("DEBUG")
+vim.lsp.set_log_level("OFF")
+
 local trim_whitespace = function()
 	local v = vim.fn.winsaveview()
 	vim.cmd([[keepp %s/\s\+$//e]])
@@ -45,4 +48,5 @@ function P(x)
 end
 
 require("plugins")
+require("plugins.telescope")
 require("lsp")
