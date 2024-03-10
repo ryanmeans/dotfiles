@@ -22,6 +22,7 @@ require("lazy").setup {
 	"hrsh7th/nvim-cmp",
 
 	"nvim-treesitter/nvim-treesitter",
+	"nvim-treesitter/playground",
 	"nvim-treesitter/nvim-treesitter-textobjects",
 	{
 		"numToStr/Comment.nvim",
@@ -50,6 +51,8 @@ require("lazy").setup {
 		tag = "0.1.3",
 		requires = { { "nvim-lua/plenary.nvim" } },
 	},
+
+	"mfussenegger/nvim-dap",
 
 	{
 		"folke/tokyonight.nvim",
@@ -131,19 +134,6 @@ require("cmp").setup {
 	preselect = cmp.PreselectMode.None,
 
 	mapping = {
-		-- ["<Tab>"] = cmp.mapping(function(fallback)
-		-- 	if cmp.visible() then
-		-- 		local entry = cmp.get_selected_entry()
-		-- 		if not entry then
-		-- 			cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
-		-- 		else
-		-- 			cmp.confirm()
-		-- 		end
-		-- 	else
-		-- 		fallback()
-		-- 	end
-		-- end, { "i", "s", "c" }),
-
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item { behavior = cmp.SelectBehavior.Insert }
@@ -203,3 +193,5 @@ require("Comment").setup {
 		extra = false,
 	},
 }
+
+local plenary = require("plenary")

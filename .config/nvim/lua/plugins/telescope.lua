@@ -28,6 +28,7 @@ vim.keymap.set("n", "<C-p>", "", {
 				layout_config = {
 					height = 15,
 				},
+				show_untracked = true,
 			})
 		else
 			builtin.find_files(themes.get_ivy {

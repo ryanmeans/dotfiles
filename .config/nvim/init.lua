@@ -2,9 +2,13 @@ vim.opt.number = true
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
+vim.g.mapleader = ","
+
+-- This speeds up startup
+-- Disable Python3 provider, since everything is lua anyways
+vim.cmd([[let g:python3_host_prog = 0]])
 
 -- vim.lsp.set_log_level("DEBUG")
-vim.lsp.set_log_level("OFF")
 
 local trim_whitespace = function()
 	local v = vim.fn.winsaveview()
@@ -47,6 +51,32 @@ function P(x)
 	print(vim.inspect(x))
 end
 
+vim.diagnostic.config {
+	severity_sort = true,
+}
+
 require("plugins")
 require("plugins.telescope")
 require("lsp")
+
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldenable = false
+
+vim.api.nvim_set_keymap("n", "<Leader><CR>", "za", { noremap = true })
+vim.api.nvim_set_keymap("n", "<Leader>n", "", {
+	callback = function()
+		vim.diagnostic.goto_next()
+	end,
+})
+vim.api.nvim_set_keymap("n", "<Leader>p", "", {
+	callback = function()
+		vim.diagnostic.goto_prev()
+	end,
+})
+
+-- Menu
+vim.cmd([[aunmenu PopUp.How-to\ disable\ mouse]])
+-- vim.cmd([[aunmenu PopUp.-1-]])
+vim.cmd([[amenu PopUp.Set\ Breakpoint :lua require('dap').toggle_breakpoint()<CR>]])
+-- vim.cmd([[nmenu PopUp.Set\ Breakpoint\ And\ Run <nop>]])

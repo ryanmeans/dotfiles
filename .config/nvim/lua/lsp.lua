@@ -7,7 +7,9 @@ null_ls.setup {
 		null_ls.builtins.formatting.stylua,
 		null_ls.builtins.formatting.cmake_format,
 		null_ls.builtins.formatting.clang_format,
-		-- null_ls.builtins.formatting.black,
+		-- null_ls.builtins.formatting.black.with {
+		-- 	extra_args = { "--line-length", "120" },
+		-- },
 	},
 }
 
@@ -45,8 +47,36 @@ require("lspconfig").clangd.setup {
 }
 
 require("lspconfig").gopls.setup {}
-require("lspconfig").terraformls.setup {}
-require("lspconfig").pyright.setup {}
+require("lspconfig").terraformls.setup {
+	on_attach = function(client)
+		client.server_capabilities.semanticTokensProvider = nil
+	end,
+}
+
+require("lspconfig").pyright.setup {
+	python = {
+		analysis = {
+			logLevel = "Trace",
+		},
+	},
+}
+
+require("lspconfig").tsserver.setup {}
+
+require("lspconfig").yamlls.setup {
+	settings = {
+		yaml = {
+			redhat = {
+				telemetry = {
+					enabled = false,
+				},
+			},
+			schemas = {
+				["/Users/means/pangea/pangea-yml-schema.json"] = "*/pangea.yml",
+			},
+		},
+	},
+}
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
