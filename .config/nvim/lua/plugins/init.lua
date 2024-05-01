@@ -14,11 +14,12 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup {
 	"alexghergh/nvim-tmux-navigation",
+	"numToStr/Navigator.nvim",
 
 	-- Autocomplete
 	"hrsh7th/cmp-nvim-lsp",
-	"hrsh7th/cmp-buffer",
 	"hrsh7th/cmp-path",
+	"hrsh7th/cmp-buffer",
 	"hrsh7th/nvim-cmp",
 
 	"nvim-treesitter/nvim-treesitter",
@@ -54,51 +55,120 @@ require("lazy").setup {
 
 	"mfussenegger/nvim-dap",
 
-	{
-		"folke/tokyonight.nvim",
-		lazy = true,
-		priority = 1000,
-		opts = {},
-	},
+	-- {
+	-- 	"folke/tokyonight.nvim",
+	-- 	lazy = true,
+	-- 	priority = 1000,
+	-- 	opts = {},
+	-- },
+	--
+	-- {
+	-- 	"phha/zenburn.nvim",
+	-- 	lazy = true,
+	-- 	priority = 1000,
+	-- 	opts = {},
+	-- },
+
+	-- {
+	-- 	"ellisonleao/gruvbox.nvim",
+	-- 	lazy = true,
+	-- 	priority = 1000,
+	-- },
 
 	{
-		"phha/zenburn.nvim",
-		lazy = true,
-		priority = 1000,
-		opts = {},
-	},
-
-	{
-		"ellisonleao/gruvbox.nvim",
+		"RRethy/base16-nvim",
 		lazy = true,
 		priority = 1000,
 	},
 }
+--
+-- require("gruvbox").setup {
+-- 	terminal_colors = true,
+-- 	contrast = "soft",
+-- 	italics = {
+-- 		strings = false,
+-- 		emphasis = false,
+-- 		comments = true,
+-- 		operators = false,
+-- 		folds = false,
+-- 	},
+-- }
 
-require("gruvbox").setup {
-	terminal_colors = true,
-	contrast = "soft",
-	italics = {
-		strings = false,
-		emphasis = false,
-		comments = true,
-		operators = false,
-		folds = false,
-	},
+-- vim.cmd([[colorscheme gruvbox]])
+
+local cfg = {
+	base00 = 0,
+	base01 = 18,
+	base02 = 19,
+	base03 = 8,
+	base04 = 20,
+	base05 = 7,
+	base06 = 21,
+	base07 = 15,
+	base08 = 9,
+	base09 = 16,
+	base0A = 11,
+	base0B = 2,
+	base0C = 6,
+	base0D = 4,
+	base0E = 5,
+	base0F = 17,
 }
 
-vim.cmd([[colorscheme gruvbox]])
-
-require("nvim-tmux-navigation").setup {
-	keybindings = {
-		left = "<C-h>",
-		down = "<C-j>",
-		up = "<C-k>",
-		right = "<C-l>",
-		last_active = "<C-\\>",
-		next = "<C-Space>",
-	},
+require("base16-colorscheme").setup {
+	-- Unused
+	base00 = "#16161D",
+	base01 = "#2c313c",
+	base02 = "#3e4451",
+	base03 = "#6c7891",
+	base04 = "#565c64",
+	base05 = "#abb2bf",
+	base06 = "#9a9bb3",
+	base07 = "#c5c8e6",
+	base08 = "#e06c75",
+	base09 = "#d19a66",
+	base0A = "#e5c07b",
+	base0B = "#98c379",
+	base0C = "#56b6c2",
+	base0D = "#0184bc",
+	base0E = "#c678dd",
+	base0F = "#a06949",
+	cterm00 = cfg.base00,
+	cterm01 = cfg.base01,
+	cterm02 = cfg.base02,
+	cterm03 = cfg.base03,
+	cterm04 = cfg.base04,
+	cterm05 = cfg.base05,
+	cterm06 = cfg.base06,
+	cterm07 = cfg.base07,
+	cterm08 = cfg.base08,
+	cterm09 = cfg.base09,
+	cterm0A = cfg.base0A,
+	cterm0B = cfg.base0B,
+	cterm0C = cfg.base0C,
+	cterm0D = cfg.base0D,
+	cterm0E = cfg.base0E,
+	cterm0F = cfg.base0F,
 }
+
+local highlights = {
+	Search = { link = "Visual" },
+	IncSearch = { link = "Search" },
+	Delimiter = { link = "Normal" },
+	["@punctuation.delimiter"] = { link = "Normal" },
+
+	CmpItemAbbr = { fg = cfg.base05 },
+}
+
+for group, opts in pairs(highlights) do
+	vim.api.nvim_set_hl(0, group, opts)
+end
+
+require("Navigator").setup {}
+vim.keymap.set({ "n", "t" }, "<C-h>", "<CMD>NavigatorLeft<CR>")
+vim.keymap.set({ "n", "t" }, "<C-j>", "<CMD>NavigatorDown<CR>")
+vim.keymap.set({ "n", "t" }, "<C-k>", "<CMD>NavigatorUp<CR>")
+vim.keymap.set({ "n", "t" }, "<C-l>", "<CMD>NavigatorRight<CR>")
 
 -- Vim CMP
 local has_words_before = function()
@@ -118,7 +188,7 @@ require("cmp").setup {
 	sources = {
 		{ name = "path" },
 		{ name = "nvim_lsp", keyword_length = 1 },
-		{ name = "buffer", keyword_length = 3 },
+		{ name = "buffer", keyword_length = 3, priority = -10000 },
 	},
 
 	window = {

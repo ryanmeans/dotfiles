@@ -3,10 +3,9 @@ vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 vim.g.mapleader = ","
+vim.cmd([[set background=dark]])
 
--- This speeds up startup
--- Disable Python3 provider, since everything is lua anyways
-vim.cmd([[let g:python3_host_prog = 0]])
+vim.cmd([[se notermguicolors]])
 
 -- vim.lsp.set_log_level("DEBUG")
 
