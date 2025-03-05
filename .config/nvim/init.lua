@@ -19,7 +19,7 @@ end
 -- Call LSP Format, if available
 vim.api.nvim_create_autocmd("BufWrite", {
 	callback = function(ev)
-		local clients = vim.lsp.get_active_clients {
+		local clients = vim.lsp.get_clients {
 			bufnr = ev.buf,
 		}
 

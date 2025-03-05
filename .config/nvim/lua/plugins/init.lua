@@ -13,7 +13,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup {
-	"alexghergh/nvim-tmux-navigation",
+	-- "alexghergh/nvim-tmux-navigation",
 	"numToStr/Navigator.nvim",
 
 	-- Autocomplete
@@ -35,6 +35,7 @@ require("lazy").setup {
 	"williamboman/mason-lspconfig.nvim",
 	"neovim/nvim-lspconfig",
 	"jose-elias-alvarez/null-ls.nvim",
+	{ "towolf/vim-helm", ft = "helm" },
 
 	{
 		"folke/neodev.nvim",
@@ -156,6 +157,7 @@ local highlights = {
 	IncSearch = { link = "Search" },
 	Delimiter = { link = "Normal" },
 	["@punctuation.delimiter"] = { link = "Normal" },
+	NormalFloat = { ctermfg = cfg.base05, ctermbg = cfg.base01 },
 
 	CmpItemAbbr = { fg = cfg.base05 },
 }

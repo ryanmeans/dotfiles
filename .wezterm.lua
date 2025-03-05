@@ -6,6 +6,7 @@ config.font = wezterm.font("SF Mono")
 config.font_size = 13.0
 
 config.use_fancy_tab_bar = false
+-- config.window_decorations = "TITLE|RESIZE"
 config.window_decorations = "RESIZE"
 config.audible_bell = "Disabled"
 config.inactive_pane_hsb = {
@@ -53,6 +54,8 @@ local function action_if(cond, key, mods, action)
 	return { key = key, mods = mods, action = wezterm.action_callback(callback) }
 end
 
+-- config.disable_default_key_bindings = true
+
 config.leader = { key = "a", mods = "CTRL" }
 config.keys = {
 	{ key = "v", mods = "LEADER", action = wezterm.action({ SplitHorizontal = { domain = "CurrentPaneDomain" } }) },
@@ -72,16 +75,6 @@ config.keys = {
 	{ key = "J", mods = "CTRL|SHIFT", action = resize_pane("Down") },
 	{ key = "K", mods = "CTRL|SHIFT", action = resize_pane("Up") },
 	{ key = "L", mods = "CTRL|SHIFT", action = resize_pane("Right") },
-	{ key = "1", mods = "LEADER", action = activate_tab(0) },
-	{ key = "2", mods = "LEADER", action = activate_tab(1) },
-	{ key = "3", mods = "LEADER", action = activate_tab(2) },
-	{ key = "4", mods = "LEADER", action = activate_tab(3) },
-	{ key = "5", mods = "LEADER", action = activate_tab(4) },
-	{ key = "6", mods = "LEADER", action = activate_tab(5) },
-	{ key = "7", mods = "LEADER", action = activate_tab(6) },
-	{ key = "8", mods = "LEADER", action = activate_tab(7) },
-	{ key = "9", mods = "LEADER", action = activate_tab(8) },
-	{ key = "0", mods = "LEADER", action = activate_tab(9) },
 
 	{
 		key = "#",
@@ -98,6 +91,25 @@ config.keys = {
 		action = act.ShowDebugOverlay,
 	},
 }
+
+-- Tab keybinds, since we supports 10 tabs and need 10 seperate keybinds for these
+-- Note that wezterm UI shows tabs as 1-10, but internally
+-- indexes these as 0-9 (probably because of rust, not lua)
+for i = 1, 10 do
+	local key = (i == 10) and tostring(0) or tostring(i)
+
+	table.insert(config.keys, {
+		key = key,
+		mods = "LEADER",
+		action = activate_tab(i - 1),
+	})
+
+	table.insert(config.keys, {
+		key = key,
+		mods = "CTRL|ALT",
+		action = wezterm.action.MoveTab(i - 1),
+	})
+end
 
 config.adjust_window_size_when_changing_font_size = false
 

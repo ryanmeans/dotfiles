@@ -63,19 +63,10 @@ require("lspconfig").pyright.setup {
 
 require("lspconfig").tsserver.setup {}
 
-require("lspconfig").yamlls.setup {
-	settings = {
-		yaml = {
-			redhat = {
-				telemetry = {
-					enabled = false,
-				},
-			},
-			schemas = {
-				["/Users/means/pangea/pangea-yml-schema.json"] = "*/pangea.yml",
-			},
-		},
-	},
+require("lspconfig").zls.setup {
+	on_attach = function(client)
+		client.server_capabilities.semanticTokensProvider = nil
+	end,
 }
 
 -- Global mappings.
