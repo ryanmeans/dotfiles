@@ -1,6 +1,18 @@
 local builtin = require("telescope.builtin")
 -- local themes = require("telescope.themes")
 require("telescope").setup {
+	pickers = {
+		live_grep = {
+			previewer = false,
+		},
+		find_files = {
+			previewer = false,
+		},
+		git_files = {
+			previewer = false,
+		},
+	},
+
 	defaults = {
 		mappings = {
 			n = {

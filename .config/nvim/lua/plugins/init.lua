@@ -13,6 +13,18 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup {
+	{
+		"folke/lazydev.nvim",
+		ft = "lua", -- only load on lua files
+		opts = {
+			library = {
+				-- See the configuration section for more details
+				-- Load luvit types when the `vim.uv` word is found
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+			},
+		},
+	},
+
 	-- "alexghergh/nvim-tmux-navigation",
 	"numToStr/Navigator.nvim",
 
@@ -20,7 +32,16 @@ require("lazy").setup {
 	"hrsh7th/cmp-nvim-lsp",
 	"hrsh7th/cmp-path",
 	"hrsh7th/cmp-buffer",
-	"hrsh7th/nvim-cmp",
+	{
+		"hrsh7th/nvim-cmp",
+		opts = function(_, opts)
+			opts.sources = opts.sources or {}
+			table.insert(opts.sources, {
+				name = "lazydev",
+				group_index = 0,
+			})
+		end,
+	},
 
 	"nvim-treesitter/nvim-treesitter",
 	"nvim-treesitter/playground",
@@ -34,13 +55,13 @@ require("lazy").setup {
 	"williamboman/mason.nvim",
 	"williamboman/mason-lspconfig.nvim",
 	"neovim/nvim-lspconfig",
-	"jose-elias-alvarez/null-ls.nvim",
+	"nvimtools/none-ls.nvim",
 	{ "towolf/vim-helm", ft = "helm" },
 
-	{
-		"folke/neodev.nvim",
-		opts = {},
-	},
+	-- {
+	-- 	"folke/neodev.nvim",
+	-- 	opts = {},
+	-- },
 
 	{
 		"tpope/vim-fugitive",
