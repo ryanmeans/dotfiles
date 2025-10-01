@@ -265,6 +265,10 @@ require("cmp").setup {
 -- so, make sure those don't conflict
 ---@diagnostic disable-next-line
 require("nvim-treesitter.configs").setup {
+	indent = {
+		enable = true,
+	},
+
 	highlight = {
 		enable = true,
 	},

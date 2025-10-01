@@ -17,20 +17,20 @@ local trim_whitespace = function()
 end
 
 -- Call LSP Format, if available
-vim.api.nvim_create_autocmd("BufWrite", {
-	callback = function(ev)
-		local clients = vim.lsp.get_clients {
-			bufnr = ev.buf,
-		}
-
-		if #clients > 0 then
-			-- TODO: can this spit out errors if the server can't format?
-			vim.lsp.buf.format()
-		else
-			trim_whitespace()
-		end
-	end,
-})
+-- vim.api.nvim_create_autocmd("BufWrite", {
+-- 	callback = function(ev)
+-- 		local clients = vim.lsp.get_clients {
+-- 			bufnr = ev.buf,
+-- 		}
+--
+-- 		if #clients > 0 then
+-- 			-- TODO: can this spit out errors if the server can't format?
+-- 			vim.lsp.buf.format()
+-- 		else
+-- 			trim_whitespace()
+-- 		end
+-- 	end,
+-- })
 
 if os.getenv("WSL_DISTRO_NAME") then
 	vim.g.clipboard = {
